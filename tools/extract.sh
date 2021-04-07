@@ -35,7 +35,11 @@ dyldpath="$mounted/System/Library/Caches/com.apple.dyld/"
 for i in $(ls "$dyldpath"); do
 	echo $i
 	arch=$(echo $i | rev | cut -d_ -f1 | rev)
-	symdir="$version ($code) $arch"
+	if [[ "$arch" == "arm" ]]; then
+		symdir="$version ($code)"
+	else
+		symdir="$version ($code) $arch"
+	fi
 	echo $symdir
 	sympath="$output/$symdir/Symbols"
 	echo "$sympath"
@@ -48,6 +52,8 @@ for i in $(ls "$dyldpath"); do
 	mkdir -p "$symdyld"
 	echo "$symdyld"
 	cp "$dyldpath/$i" "$symdyld"
+	touch "$symdyld/.copied_$i"
+	touch "$symdyld/.processed_$i"
 done
 
 # Unmount

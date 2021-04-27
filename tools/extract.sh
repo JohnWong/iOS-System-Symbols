@@ -16,8 +16,7 @@ ipsw=$1
 output=$2
 
 temppath="/tmp/extract_symbol"
-rm -rf temppath
-mkdir -p temppath
+mkdir -p "$temppath"
 unzip "$ipsw" -d "$temppath"
 
 version=$(/usr/libexec/PlistBuddy -c "Print :ProductVersion" "$temppath/Restore.plist")
@@ -35,10 +34,10 @@ dyldpath="$mounted/System/Library/Caches/com.apple.dyld/"
 for i in $(ls "$dyldpath"); do
 	echo $i
 	arch=$(echo $i | rev | cut -d_ -f1 | rev)
-	if [[ "$arch" == "arm" ]]; then
-		symdir="$version ($code)"
+	if [[ "$arch" == "arm64e" ]]; then
+		symdir="$version ($code) arm64e"
 	else
-		symdir="$version ($code) $arch"
+		symdir="$version ($code)"
 	fi
 	echo $symdir
 	sympath="$output/$symdir/Symbols"
@@ -59,8 +58,6 @@ done
 # Unmount
 hdiutil detach "$mountid"
 
-
-rm -rf "$temppath"
 
 
 

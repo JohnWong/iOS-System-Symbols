@@ -31,6 +31,8 @@ mountid=$(echo "$mountresult" | cut -d$'\t' -f1 | tr -d ' ')
 mounted=$(echo "$mountresult" | rev | cut -d$'\t' -f1 | rev)
 echo "$mountid $mounted"
 
+script_full_path=$(dirname "$0")
+
 # Extract symbol
 dyldpath="$mounted/System/Library/Caches/com.apple.dyld/"
 for i in $(ls "$dyldpath"); do
@@ -46,7 +48,7 @@ for i in $(ls "$dyldpath"); do
 	echo "$sympath"
 	mkdir -p "$sympath"
 
-	./dsc_extractor "$dyldpath/$i" "$sympath"
+	"$script_full_path/dsc_extractor" "$dyldpath/$i" "$sympath"
 
 	# 补充dyld源文件
 	symdyld="$sympath/System/Library/Caches/com.apple.dyld"

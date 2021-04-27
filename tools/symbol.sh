@@ -3,19 +3,21 @@
 # Extract symbol
 # Argument path should not contain any white space.
 #
-# How to use:
-# sh extract.sh <path_to_ipsw_file> <path_to_extracted_arm64_symbols>
-#
 
-if [ $# != 2 ] ; then
-	echo "Usage: \nsh extract.sh <path_to_ipsw_file> <path_to_extracted_arm64_symbols>"
+if [ $# != 3 ] ; then
+	echo "Usage: \nsymbol.sh <model> <code> <path_to_extracted_arm64_symbols>"
 	exit 1
 fi
 
-ipsw=$1
-output=$2
+model=$1
+buildid=$2
+output=$3
 
 temppath="/tmp/extract_symbol"
+ipsw="$temppath/$buildid.ipsw"
+
+# curl -L "https://api.ipsw.me/v4/ipsw/download/$model/$buildid" > "$ipsw"
+
 mkdir -p "$temppath"
 unzip "$ipsw" -d "$temppath"
 
